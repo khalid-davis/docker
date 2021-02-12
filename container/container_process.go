@@ -1,6 +1,7 @@
 package container
 
 import (
+	"docker/config"
 	"fmt"
 	"os"
 	"os/exec"
@@ -20,6 +21,6 @@ func NewParentProcess(tty bool, command string) *exec.Cmd {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 	}
-	cmd.Dir = "root/busybox"
+	cmd.Dir = config.Config.RootURL
 	return cmd
 }

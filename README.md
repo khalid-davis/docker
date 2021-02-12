@@ -36,3 +36,18 @@ fs/cgroup/memory文件夹下创建一个限制memeory的cgroup，方式就是在
 0. 目标：运行./docker run -ti -m 100m -cpuset 1 -cpushare 512 /bin/sh 的方式来限制容器的内存和CPU配置
 1. 先实现cgroup的操作逻辑，在cgroup/subsystem下把相关的配置实现，然后在使用cgroup_manager把它们管理起来建立与容器的关系(cgroup会有多个subsystem)
 3. 出现：no space left on device，查看github.com/xianlubird/mydocker/issues/74,解决的方式是在写入pid之前，先看看相关的配置项是否有配置值，添加一个enable项
+
+### 构建镜像
+#### tag-4.1
+1. 目标：前面章节实现的容器的目录还是当前运行程序的目录，本节的目标在于基于busybox给我们的容器提供文件系统
+2. pivot_root: 是一个系统调用，主要功能是去改变当前的root文件系统
+3. 运行./docker run -ti /bin/sh
+4. 步骤
+    - 准备镜像层目录：`docker pull busybox`, `docker run -d busybox top -b`，`docker export -o busybox.tar <contain-id>`
+    `tar -xvf busybox.tar -C /root/docker-exp/busybox`
+    - 写完代码后，`go build .`, `./docker run -ti /bin/sh`
+5. 问题
+    - 直接按书本的代码在pivot_root系统调用那里报错Invalid argument, https://github.com/xianlubird/mydocker/issues/13
+
+
+#### tag-4.2

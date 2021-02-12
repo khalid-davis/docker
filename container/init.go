@@ -48,6 +48,9 @@ func setUpMount() error {
 }
 
 func pivotRoot(root string) error {
+	if err := syscall.Mount("", "/", "", syscall.MS_PRIVATE|syscall.MS_REC, ""); err != nil {
+		return fmt.Errorf("make parent mount private error: %v", err)
+	}
 	/**
 	  为了使当前root的老 root 和新 root 不在同一个文件系统下，我们把root重新mount了一次
 	  bind mount是把相同的内容换了一个挂载点的挂载方法
