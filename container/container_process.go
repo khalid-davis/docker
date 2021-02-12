@@ -20,5 +20,6 @@ func NewParentProcess(tty bool, command string) *exec.Cmd {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 	}
+	cmd.Dir = "root/busybox"
 	return cmd
 }

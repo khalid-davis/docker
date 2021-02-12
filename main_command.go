@@ -56,6 +56,10 @@ var initCommand = cli.Command{
 		cmd := ctx.Args().Get(0)
 		logrus.Infof("init command %s", cmd)
 		err := container.RunContainerInitProcess(cmd,nil)
-		return err
+		if err != nil {
+			logrus.Errorf("init command actio err: %s", err)
+			return err
+		}
+		return nil
 	},
 }

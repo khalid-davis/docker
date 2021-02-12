@@ -10,7 +10,7 @@ import (
 func Run(tty bool, command string, res *subsystems.ResourceConfig) {
 	parent := container.NewParentProcess(tty, command)
 	if err := parent.Start(); err != nil {
-		logrus.Error(err, "maybe you need to input 'mount -t proc proc /proc' on terminal")
+		logrus.Error(err, "maybe you need to input 'umount /proc' on terminal")
 		return
 	}
 	// 创建cgroup manager， 并通过调用set和apply设置资源限制并使限制在容器上生效
