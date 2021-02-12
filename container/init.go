@@ -18,7 +18,7 @@ func RunContainerInitProcess(command string, args []string) error {
 
 	argv := []string{command}
 	if err := syscall.Exec(command, argv, os.Environ()); err != nil {
-		logrus.Errorf(err.Error())
+		logrus.Errorf("RunContainerInitProcess: ", err.Error())
 	}
 	return nil
 }
@@ -35,19 +35,26 @@ func setUpMount() error {
 	}
 	logrus.Infof("Current location is %s", pwd)
 	if err := pivotRoot(pwd); err != nil {
+		logrus.Infof("pivotRoot %s", pwd)
 		return err
 	}
 
 	//mount proc
 	defaultMountFlags := syscall.MS_NOEXEC | syscall.MS_NOSUID | syscall.MS_NODEV
 	if err := syscall.Mount("proc", "/proc", "proc", uintptr(defaultMountFlags), ""); err != nil {
+		logrus.Errorf("SetUpMount: ", err)
 		return err
 	}
 
-	return syscall.Mount("tmpfs", "/dev", "tmpfs", syscall.MS_NOSUID|syscall.MS_STRICTATIME, "mode=755")
+	if err := syscall.Mount("tmpfs", "/dev", "tmpfs", syscall.MS_NOSUID|syscall.MS_STRICTATIME, "mode=755"); err != nil{
+		logrus.Errorf("SetUpMount 2: ", err)
+		return err
+	}
+	return nil
 }
 
 func pivotRoot(root string) error {
+	// https://github.com/xianlubird/mydocker/issues/13
 	if err := syscall.Mount("", "/", "", syscall.MS_PRIVATE|syscall.MS_REC, ""); err != nil {
 		return fmt.Errorf("make parent mount private error: %v", err)
 	}

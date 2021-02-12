@@ -3,6 +3,7 @@ package main
 import (
 	"docker/cgroups"
 	"docker/cgroups/subsystems"
+	"docker/config"
 	"docker/container"
 	"github.com/sirupsen/logrus"
 )
@@ -28,5 +29,7 @@ func Run(tty bool, command string, res *subsystems.ResourceConfig) {
 		return
 	}
 	parent.Wait()
+	// 进行清理
+	container.DeleteWorkSpace(config.Config.RootURL, config.Config.MntURL)
 }
 

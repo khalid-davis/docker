@@ -46,6 +46,8 @@ fs/cgroup/memory文件夹下创建一个限制memeory的cgroup，方式就是在
     - 准备镜像层目录：`docker pull busybox`, `docker run -d busybox top -b`，`docker export -o busybox.tar <contain-id>`
     `tar -xvf busybox.tar -C /root/docker-exp/busybox`
     - 写完代码后，`go build .`, `./docker run -ti /bin/sh`
+    - 我们再开一个终端，在/root/docker-exp/busybox下面可以看到有writeLayer和mnt两个目录，然后和容器里面的目录进行添加文件或者修改，可以发现在mnt会显示，而且修改项在writeLayer目录下也有
+        但是busybox里面不会有变化
 5. 问题
     - 直接按书本的代码在pivot_root系统调用那里报错Invalid argument, https://github.com/xianlubird/mydocker/issues/13
 
