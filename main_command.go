@@ -1,6 +1,7 @@
 package main
 
 import (
+	"docker/cgroups/subsystems"
 	"docker/container"
 	"fmt"
 	"github.com/sirupsen/logrus"
@@ -15,6 +16,18 @@ var runCommand = cli.Command{
 			Name: "ti",
 			Usage: "enable tty",
 		},
+		cli.StringFlag{
+			Name: "m",
+			Usage: "memory limit",
+		},
+		cli.StringFlag{
+			Name: "cpushare",
+			Usage: "cpushare limit",
+		},
+		cli.StringFlag{
+			Name: "cpuset",
+			Usage: "cpuset limit",
+		},
 	},
 	Action: func(context *cli.Context) error {
 		logrus.Info("run command action start")
@@ -23,7 +36,13 @@ var runCommand = cli.Command{
 		}
 		cmd := context.Args().Get(0)
 		tty := context.Bool("ti")
-		Run(tty, cmd)
+		resConf := &subsystems.ResourceConfig{
+			MemoryLimit: context.String("m"),
+			CpuSet: context.String("cpuset"),
+			CpuShare: context.String("cpushare"),
+		}
+		logrus.Info("resConf: ", resConf.MemoryLimit)
+		Run(tty, cmd, resConf)
 		logrus.Info("run command action end")
 		return nil
 	},

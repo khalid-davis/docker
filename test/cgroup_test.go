@@ -13,7 +13,7 @@ import (
 
 const (
 	// 挂载了memory subsystem的hierarchy的根目录位置
-	cgroupMemoryHierarchyMount = "/sys/fs/cgroup/memory"
+	cgroupMemoryHierarchyMount = "/sys/fs/cgroups/memory"
 )
 
 func TestCgroup(t *testing.T) {
@@ -47,7 +47,7 @@ func TestCgroup(t *testing.T) {
 	fmt.Printf("%+v\n", cmd.Process.Pid)
 
 	// 在系统默认创建挂载了memory subsystem的hierarchy上创建cgroup
-	newCgroup := path.Join(cgroupMemoryHierarchyMount, "cgroup-demo-memory-3")
+	newCgroup := path.Join(cgroupMemoryHierarchyMount, "cgroups-demo-memory-3")
 	// 如果想删除cgroup的目录，需要先umount <dir-name>，再删除
 	//if err := os.Mkdir(newCgroup, 0755); err != nil {
 	//	panic(err)
