@@ -24,6 +24,7 @@ func NewParentProcess(tty bool, command string) *exec.Cmd {
 		cmd.Stderr = os.Stderr
 	}
 	NewWorkSpace(config.Config.RootURL, config.Config.MntURL)
+	// 设定窗口使用的目录为mntURL
 	cmd.Dir = config.Config.MntURL
 	return cmd
 }
@@ -35,6 +36,7 @@ func NewWorkSpace(rootURL string, mntURL string) {
 	CreateMountPoint(rootURL, mntURL)
 }
 
+// 新建busybox文件夹，将busybox.tar解压到指定的目录，并作为容器的只读层
 func CreateReadOnlyLayer(rootURL string) {
 	busyboxURL := rootURL + "busybox/"
 	busyboxTarURL := rootURL + "busybox.tar"
@@ -52,6 +54,7 @@ func CreateReadOnlyLayer(rootURL string) {
 	}
 }
 
+// 创建一个名为writeLayer的文件夹，作为容器唯一的可写层
 func CreateWriteLayer(rootURL string) {
 	writeURL := rootURL + "writeLayer/"
 	log.Println("CreateWriteLayer: ", writeURL)
@@ -60,6 +63,7 @@ func CreateWriteLayer(rootURL string) {
 	}
 }
 
+// 创建mnt文件夹，作为挂载点，然后把writeLayer目录和busybox目录mount到mnt目录下
 func CreateMountPoint(rootURL string, mntURL string) {
 	if err := os.Mkdir(mntURL, 0777); err != nil {
 		logrus.Errorf("Mkdir dir %s error. %v", mntURL, err)
