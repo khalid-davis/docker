@@ -150,4 +150,13 @@ fs/cgroup/memory文件夹下创建一个限制memeory的cgroup，方式就是在
           # 将宿主机上80端口的请求转发到Namespace的IP上
             iptables -t nat -A PREROUTING -p tcp -m tcp --dport 80 -j DNAT --to-destination 172.18.0.2:80
         ```
+    - 具体的使用
+        ```shell script
+          # 创建一个供容器连接的网络，用于让容器挂载
+          ./docker netowrk create --drive bridge --subnet 192.168.10.1/24 testbridge
+          # 创建容器并挂载到上面创建的网桥
+          ./docker run -ti -net testbridge busybox /bin/sh
+          ./docker run -ti -net testbridge busybox /bin/sh 
+          # 在上面创建了两个容器，可以通过ifconfig查看ip，并互相ping
+        ```
        
